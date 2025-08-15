@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Support Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+            * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(
+180deg,
+#005530 0%,
+#006844 10%,
+#007a58 20%,
+#008c6d 30%,
+#009d82 40%,
+#00ad97 50%,
+#00bdac 60%,
+#00cbc1 70%,
+#00d9d6 80%,
+#00e6eb 90%,
+#00e6eb 100%
+);
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background-color: #005530;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #0f3460;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            font-size: 24px;
+            margin-right: 50px;
+            color: #fdbd01;
+            margin-top: -5px;
+            margin-bottom:-5px;
+        }
+        .logo-icon i {
+             background-color: #000000;
+             border:1.5px solid #fdbd01;
+             padding:5px;
+             border-radius: 50%;
+        }
+        .logo-text {
+            font-weight: 900;
+            font-size: 18px;
+            font-family: serif;
+            color:#fdbd01;
+        }
+        
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            overflow: hidden;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background-color: #16213e;
+            font-family: fantasy;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            font-family: fantasy;
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message.app {
+            justify-content: flex-start;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            position: relative;
+            word-wrap: break-word;
+            font-family: fantasy;
+        }
+        
+        .user .message-content {
+            background-color: #e94560;
+            border-top-right-radius: 4px;
+            font-family:fantasy;
+        }
+        
+        .app .message-content {
+            background-color: #0f3460;
+            border-top-left-radius: 4px;
+            font-family: fantasy;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #0f3460;
+            border-radius: 18px;
+            width: fit-content;
+            margin-bottom: 15px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #fff;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes bounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .input-area {
+            display: flex;
+            padding: 10px;
+            background-color: #16213e;
+            border-radius: 8px;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 20px;
+            background-color: #0f3460;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            font-family: serif;
+        }
+        
+        .send-btn {
+            background-color: #e94560;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        
+        .send-btn:hover {
+            background-color: #d13354;
+        }
+        
+        .send-btn i {
+            font-size: 18px;
+        }
+        
+        .quick-issues {
+            margin-top: -5px;
+            display: none;
+            margin-bottom: 5px;
+        }
+        
+        .quick-issues-title {
+            font-size: 14px;
+            color: #005530;
+            margin-bottom: 8px;
+            font-family: serif;
+            margin-top: 2px;
+        }
+        
+        .issue-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .issue-btn {
+            background-color: #0f3460;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family:serif;
+        }
+        
+        .issue-btn:hover {
+            background-color: #e94560;
+        }
+        
+        .timestamp {
+            font-size: 10px;
+            color: #005530;
+            margin-top: 5px;
+            margin-left: 4px;
+            text-align: right;
+            font-family: serif;
+            font-weight: 900;
+            border-top: 1px solid #005530;
+        }
+        
+        @media (max-width: 600px) {
+            .chat-container {
+                padding: 10px;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+        }
+            .back-button {
+    position: fixed;
+    top: 7px;
+    right: 15px;
+    padding: 5px 8px;
+    background:url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhRlFH63IgxUmi8K8g1acNuj-8jwXzzGJsdADxpA8v1oI5rpZE9kr0d8LNK4yG8kG-GaIOtpbYzHJDDtX0YOIkuwx10w-8LaDjxXxzwof7wWuFXZcLTfz4Af3xgf5wiLHHVqdy8RhCzVtBZwOyneesfONeAvIZVbivrYbws7OPpCPrFu5fGVSiQ7c20ZLE/s16000/1000100704.png');
+    color: #fdbd01;
+    border: none;
+    background-size: 100% 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 30px;
+    font-weight: 900;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    text-decoration: none;
+}
+.back-button {
+  text-shadow: 
+    1px 1px 0 #005530, 
+    2px 2px 0 #005530,
+    3px 3px 0 #005530;
+}
+
+.back-button:hover {
+    transform: translateX(-5px);
+}
+
+.back-button i {
+    margin-right: 8px;
+}
+    </style>
+</head>
+<body>
+    <a class="back-button" href="#">
+  <i class="fas fa-angle-left"></i>
+</a>
+
+<script>
+  document.querySelector('.back-button').addEventListener('click', (e) => {
+    e.preventDefault();
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = 'go:home'; // Fallback to home
+    }
+  });
+</script>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">
+                 <i class="fas fa-headset"></i>
+            </div>
+            <div class="logo-text">Kimi Win Support Assistant</div>
+        </div>
+    </div>
+    
+    <div class="chat-container">
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will appear here -->
+        </div>
+        
+        <div class="quick-issues" id="quick-issues">
+            <div class="quick-issues-title">FAQs:</div>
+            <div class="issue-buttons" id="issue-buttons">
+                <!-- Quick issue buttons will appear here -->
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" class="message-input" id="message-input" placeholder="Type your message here...">
+            <button class="send-btn" id="send-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
+    <script src="app.js"></script>
+</body>
+</html>
